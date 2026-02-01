@@ -1,1 +1,1 @@
-edges
+dijkstra
