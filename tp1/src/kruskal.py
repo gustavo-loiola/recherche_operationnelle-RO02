@@ -1,5 +1,8 @@
 import numpy as np
-import graph
+try:
+    from src import graph 
+except ImportError:
+    import graph         
 import sys
 
 def main():
@@ -22,20 +25,18 @@ def main():
     g.addEdge("f", "g", 10.0)
     
     # Obtenir un arbre couvrant de poids minimal du graphe
-    tree = kruskal(g)
+    print("Arbre couvrant de poids minimal :")
+    tree_min = kruskal(g, computeMin=True)
+    print(tree_min if tree_min else "Pas d'arbre couvrant")
     
-    # S'il existe un tel arbre (i.e., si le graphe est connexe)
-    if tree != None:
-        
-        # L'afficher
-        print(tree)
-    
-    else:
-        print("Pas d'arbre couvrant")
+    # Obtenir un arbre couvrant de poids maximal du graphe
+    print("\nArbre couvrant de poids maximal :")
+    tree_max = kruskal(g, computeMin=False)
+    print(tree_max if tree_max else "Pas d'arbre couvrant")
 
 # Applique l'algorithme de Kruskal pour trouver un arbre couvrant de poids minimal d'un graphe
 # Retourne: Un arbre couvrant de poids minimal du graphe ou None s'il n'en existe pas
-def kruskal(g):
+def kruskal(g, computeMin=True):
     # Créer un nouveau graphe contenant les mêmes sommets que g
     tree = graph.Graph(g.nodes)
     
@@ -45,8 +46,8 @@ def kruskal(g):
     # Récupérer toutes les arêtes de g
     edges = g.getEdges()
     
-    # Trier les arêtes par poids croissant
-    edges.sort()
+    # Trier les arêtes par poids croissant ou décroissant selon computeMin
+    edges.sort(reverse=not computeMin)
 
     # Parcourir les arêtes triées
     for edge in edges:
